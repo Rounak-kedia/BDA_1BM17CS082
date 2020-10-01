@@ -1,0 +1,99 @@
+> use company;
+switched to db company
+> db;
+company
+> show dbs;
+admin   0.000GB
+config  0.000GB
+local   0.000GB
+myDB    0.000GB
+>
+> db.createCollection("Employee");
+{ "ok" : 1 }
+> db.createCollection("Department");
+{ "ok" : 1 }
+>
+> db.Employee.insert({_id:1,name:"Rounak",age:30,dept_id:123});
+WriteResult({ "nInserted" : 1 })
+> db.Employee.insertOne({_id:2,name:"Rohit",age:35,dept_id:1003});
+{ "acknowledged" : true, "insertedId" : 2 }
+> db.Employee.insertMany([{_id:3,name:"Sai",age:33,dept_id:1001},{_id:4,name:"Saif",age:39,dept_id:1002}]);
+{ "acknowledged" : true, "insertedIds" : [ 3, 4 ] }
+>
+>
+> db.Department.insert({_id:1,dname:"CSE",dept_id:1001});
+WriteResult({ "nInserted" : 1 })
+> db.Department.insertOne({_id:2,dname:"ISE",dept_id:1002});
+{ "acknowledged" : true, "insertedId" : 2 }
+> db.Department.insertMany([{_id:3,dname:"ECE",dept_id:1003},{_id:4,dname:"EEE",dept_id:1004},{_id:5,dname:"MECH",dept_id:1005}]);
+{ "acknowledged" : true, "insertedIds" : [ 3, 4, 5 ] }
+>
+> db.Employee.update({_id:1},{$set:{"dept_id":1001}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+>
+> db.Employee.update({_id:1},{$set:{sal:1000}},{upsert:true});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+>
+> db.Employee.find().pretty();
+{
+        "_id" : 1,
+        "name" : "Rounak",
+        "age" : 30,
+        "dept_id" : 1001,
+        "sal" : 1000
+}
+{ "_id" : 2, "name" : "Rohit", "age" : 35, "dept_id" : 1003 }
+{ "_id" : 3, "name" : "Sai", "age" : 33, "dept_id" : 1001 }
+{ "_id" : 4, "name" : "Saif", "age" : 39, "dept_id" : 1002 }
+>
+>
+> db.Employee.update({_id:3},{$set:{"age":28}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+>
+> db.Employee.find().pretty();
+{
+        "_id" : 1,
+        "name" : "Rounak",
+        "age" : 30,
+        "dept_id" : 1001,
+        "sal" : 1000
+}
+{ "_id" : 2, "name" : "Rohit", "age" : 35, "dept_id" : 1003 }
+{ "_id" : 3, "name" : "Sai", "age" : 28, "dept_id" : 1001 }
+{ "_id" : 4, "name" : "Saif", "age" : 39, "dept_id" : 1002 }
+>
+>
+> db.Department.find().pretty();
+{ "_id" : 1, "dname" : "CSE", "dept_id" : 1001 }
+{ "_id" : 2, "dname" : "ISE", "dept_id" : 1002 }
+{ "_id" : 3, "dname" : "ECE", "dept_id" : 1003 }
+{ "_id" : 4, "dname" : "EEE", "dept_id" : 1004 }
+{ "_id" : 5, "dname" : "MECH", "dept_id" : 1005 }
+>
+>
+> db.Employee.update({_id:1},{$unset:{"sal":""}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+> db.Employee.find().pretty();
+{ "_id" : 1, "name" : "Rounak", "age" : 30, "dept_id" : 1001 }
+{ "_id" : 2, "name" : "Rohit", "age" : 35, "dept_id" : 1003 }
+{ "_id" : 3, "name" : "Sai", "age" : 28, "dept_id" : 1001 }
+{ "_id" : 4, "name" : "Saif", "age" : 39, "dept_id" : 1002 }
+>
+>
+> db.Employee.find({dept_id:{"$gt":1000,"$lt":1005}},{name:true,dept_id:true});
+{ "_id" : 1, "name" : "Rounak", "dept_id" : 1001 }
+{ "_id" : 2, "name" : "Rohit", "dept_id" : 1003 }
+{ "_id" : 3, "name" : "Sai", "dept_id" : 1001 }
+{ "_id" : 4, "name" : "Saif", "dept_id" : 1002 }
+>
+>
+> db.Employee.find({Name:/^R/}).pretty();
+> db.Employee.find({name:/^R/}).pretty();
+{ "_id" : 1, "name" : "Rounak", "age" : 30, "dept_id" : 1001 }
+{ "_id" : 2, "name" : "Rohit", "age" : 35, "dept_id" : 1003 }
+>
+>
+> db.Employee.find({age:{$gt:30}}).pretty();
+{ "_id" : 2, "name" : "Rohit", "age" : 35, "dept_id" : 1003 }
+{ "_id" : 4, "name" : "Saif", "age" : 39, "dept_id" : 1002 }
+>

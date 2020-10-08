@@ -1,0 +1,121 @@
+> use student;
+switched to db student
+> db;
+student
+> show dbs;
+admin    0.000GB
+company  0.000GB
+config   0.000GB
+local    0.000GB
+myDB     0.000GB
+>
+> db.createCollection("Stud");
+{ "ok" : 1 }
+> db.Stud.insert({_id:1, name : "Rounak", rollno:1, age:21, ContactNo:999, EmailId: "a@b.com"});
+WriteResult({ "nInserted" : 1 })
+> db.Stud.insert({_id:2, name : "ADE", rollno:10, age:21, ContactNo:9999, EmailId: "aBCD@b.com"});
+WriteResult({ "nInserted" : 1 })
+> db.Stud.insert({_id:3, name : "ABC", rollno:11, age:21, ContactNo:999999, EmailId: "aCD@b.com"});
+WriteResult({ "nInserted" : 1 })
+> db.Stud.insert({_id:4, name : "ADAABC", rollno:12, age:22, ContactNo:99999988, EmailId: "DNEW@b.com"});
+WriteResult({ "nInserted" : 1 })
+>
+> db.Stud.find();
+{ "_id" : 1, "name" : "Rounak", "rollno" : 1, "age" : 21, "ContactNo" : 999, "EmailId" : "a@b.com" }
+{ "_id" : 2, "name" : "ADE", "rollno" : 10, "age" : 21, "ContactNo" : 9999, "EmailId" : "aBCD@b.com" }
+{ "_id" : 3, "name" : "ABC", "rollno" : 11, "age" : 21, "ContactNo" : 999999, "EmailId" : "aCD@b.com" }
+{ "_id" : 4, "name" : "ADAABC", "rollno" : 12, "age" : 22, "ContactNo" : 99999988, "EmailId" : "DNEW@b.com" }
+>
+>
+> db.Stud.update({rollno:10},{$set:{EmailId:"he"}})  db.Stud.update({rollno:10},{$set:{EmailId:"hel"}}) db.Stud.update({rollno:10},{$set:{EmailId:"hell"}})db.Stud.update(
+>
+>
+> db.Stud.update({rollno:10},{$set:{EmailId:"hello@b.com"}});
+WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 })
+>
+> db.Stud.find({rollno:10});
+{ "_id" : 2, "name" : "ADE", "rollno" : 10, "age" : 21, "ContactNo" : 9999, "EmailId" : "hello@b.com" }
+>
+> db.Stud.replaceOne({"rollno":11}{"name": "FEM", "rollno":11, "age":21, "ContactNo":9999, "EmailId": "aBCD@b.com"});
+2020-10-08T15:34:31.886+0530 E QUERY    [js] SyntaxError: missing ) after argument list @(shell):1:32
+> db.Stud.replaceOne({"rollno":11},{"name": "FEM", "rollno":11, "age":21, "ContactNo":9999, "EmailId": "aBCD@b.com"});
+{ "acknowledged" : true, "matchedCount" : 1, "modifiedCount" : 1 }
+>
+> exit
+bye
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongoexport -d student -c Stud -f name,rollno,age,ContactNo,EmailId --type=csv -o F:\Mongo\Student.csv
+2020-10-08T15:40:27.540+0530    connected to: localhost
+2020-10-08T15:40:27.542+0530    exported 4 records
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongo
+MongoDB shell version v4.0.20-36-gf8006ee
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("e4564940-255d-4489-ae17-0dde31a85daf") }
+MongoDB server version: 4.0.20-36-gf8006ee
+Server has startup warnings:
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten]
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+> use student;
+switched to db student
+> db;
+student
+> db.Stud.drop();
+true
+>
+> db.Stud.find();
+>
+>
+> exit
+bye
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongoimport -d student -c Stud --type csv -f name,rollno,age,ContactNo,EmailId --file F:\Mongo\Student.csv
+2020-10-08T15:44:50.112+0530    connected to: localhost
+2020-10-08T15:44:50.267+0530    imported 5 documents
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongo
+MongoDB shell version v4.0.20-36-gf8006ee
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("ef03fb25-38b7-432c-8891-eff0e7b454d6") }
+MongoDB server version: 4.0.20-36-gf8006ee
+Server has startup warnings:
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten]
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+> use student;
+switched to db student
+>
+> db.Stud.find();
+{ "_id" : ObjectId("5f7ee69a89d7eb67df1f3ab7"), "name" : "name", "rollno" : "rollno", "age" : "age", "ContactNo" : "ContactNo", "EmailId" : "EmailId" }
+{ "_id" : ObjectId("5f7ee69a89d7eb67df1f3ab8"), "name" : "ADAABC", "rollno" : 12, "age" : 22, "ContactNo" : 99999988, "EmailId" : "DNEW@b.com" }
+{ "_id" : ObjectId("5f7ee69a89d7eb67df1f3ab9"), "name" : "ADE", "rollno" : 10, "age" : 21, "ContactNo" : 9999, "EmailId" : "hello@b.com" }
+{ "_id" : ObjectId("5f7ee69a89d7eb67df1f3aba"), "name" : "FEM", "rollno" : 11, "age" : 21, "ContactNo" : 9999, "EmailId" : "aBCD@b.com" }
+{ "_id" : ObjectId("5f7ee69a89d7eb67df1f3abb"), "name" : "Rounak", "rollno" : 1, "age" : 21, "ContactNo" : 999, "EmailId" : "a@b.com" }
+>

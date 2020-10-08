@@ -1,0 +1,174 @@
+> use mynew;
+switched to db mynew
+>
+> db;
+mynew
+>
+> show dbs;
+admin    0.000GB
+company  0.000GB
+config   0.000GB
+local    0.000GB
+myDB     0.000GB
+student  0.000GB
+>
+> db.createCollection("Customer");
+{ "ok" : 1 }
+> db.Customer.insert({cust_id:1,Acc_bal:1500,Acc_type:"Z"});
+WriteResult({ "nInserted" : 1 })
+> ^C
+bye
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongo
+MongoDB shell version v4.0.20-36-gf8006ee
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("0d006071-f961-408f-ad44-7af228c2af7b") }
+MongoDB server version: 4.0.20-36-gf8006ee
+Server has startup warnings:
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten]
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+> use mynew;
+switched to db mynew
+> db;
+mynew
+> show dbs;
+admin    0.000GB
+company  0.000GB
+config   0.000GB
+local    0.000GB
+myDB     0.000GB
+mynew    0.000GB
+student  0.000GB
+>
+> db.Customer.insert({cust_id:2,Acc_bal:3000,Acc_type:"A"});
+WriteResult({ "nInserted" : 1 })
+> db.Customer.insert({cust_id:3,Acc_bal:1200,Acc_type:"A"});
+WriteResult({ "nInserted" : 1 })
+> db.Customer.insert({cust_id:2,Acc_bal:1200,Acc_type:"Z"});
+WriteResult({ "nInserted" : 1 })
+> db.Customer.insert({cust_id:3,Acc_bal:1280,Acc_type:"Z"});
+WriteResult({ "nInserted" : 1 })
+>
+> db.Customer.find();
+{ "_id" : ObjectId("5f7ee871db549e5ed9de467e"), "cust_id" : 1, "Acc_bal" : 1500, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7ee8cdb9ed92632ce25700"), "cust_id" : 2, "Acc_bal" : 3000, "Acc_type" : "A" }
+{ "_id" : ObjectId("5f7ee8d9b9ed92632ce25701"), "cust_id" : 3, "Acc_bal" : 1200, "Acc_type" : "A" }
+{ "_id" : ObjectId("5f7ee901b9ed92632ce25702"), "cust_id" : 2, "Acc_bal" : 1200, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7ee90bb9ed92632ce25703"), "cust_id" : 3, "Acc_bal" : 1280, "Acc_type" : "Z" }
+>
+>
+> db.Customer.find({Acc_bal:{$gt:1200}, Acc_type:"Z"});
+{ "_id" : ObjectId("5f7ee871db549e5ed9de467e"), "cust_id" : 1, "Acc_bal" : 1500, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7ee90bb9ed92632ce25703"), "cust_id" : 3, "Acc_bal" : 1280, "Acc_type" : "Z" }
+>
+> db.Customer.aggregate([
+... ...     {
+... ...         $group: {
+... ...             _id: "$cust_id",
+... ...             min_bal: {$min: "$Acc_bal"},
+... ...             max_bal: {$max: "$Acc_bal"}
+... ...         }
+... ...     }
+... ... ]);
+{ "_id" : 3, "min_bal" : 1200, "max_bal" : 1280 }
+{ "_id" : 2, "min_bal" : 1200, "max_bal" : 3000 }
+{ "_id" : 1, "min_bal" : 1500, "max_bal" : 1500 }
+>
+>
+> db.Customer.find();
+{ "_id" : ObjectId("5f7ee871db549e5ed9de467e"), "cust_id" : 1, "Acc_bal" : 1500, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7ee8cdb9ed92632ce25700"), "cust_id" : 2, "Acc_bal" : 3000, "Acc_type" : "A" }
+{ "_id" : ObjectId("5f7ee8d9b9ed92632ce25701"), "cust_id" : 3, "Acc_bal" : 1200, "Acc_type" : "A" }
+{ "_id" : ObjectId("5f7ee901b9ed92632ce25702"), "cust_id" : 2, "Acc_bal" : 1200, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7ee90bb9ed92632ce25703"), "cust_id" : 3, "Acc_bal" : 1280, "Acc_type" : "Z" }
+>
+> exit
+bye
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongoexport -d mynew -c Customer -f cust_id,Acc_bal,Acc_type --type=csv -o F:\Mongo\Customer.csv
+2020-10-08T16:00:40.513+0530    connected to: localhost
+2020-10-08T16:00:40.515+0530    exported 5 records
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongo
+MongoDB shell version v4.0.20-36-gf8006ee
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("968a3021-59a0-4e43-b35e-bf4047255a29") }
+MongoDB server version: 4.0.20-36-gf8006ee
+Server has startup warnings:
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten]
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+> use mynew;
+switched to db mynew
+>
+> db.Customer.drop();
+true
+> db.Customer.find();
+>
+> exit
+bye
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongoimport -d mynew -c Customer --type csv -f cust_id,Acc_bal,Acc_type --file F:\Mongo\Customer.csv
+2020-10-08T16:02:40.349+0530    connected to: localhost
+2020-10-08T16:02:40.536+0530    imported 6 documents
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongo
+MongoDB shell version v4.0.20-36-gf8006ee
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("96d3c0fb-8396-401e-8b6c-f717fa1539c7") }
+MongoDB server version: 4.0.20-36-gf8006ee
+Server has startup warnings:
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten]
+2020-10-01T14:59:04.159+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-01T14:59:04.160+0530 I CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+> use mynew;
+switched to db mynew
+>
+> db.Customer.find();
+{ "_id" : ObjectId("5f7eeac889d7eb67df1f3b35"), "cust_id" : 3, "Acc_bal" : 1200, "Acc_type" : "A" }
+{ "_id" : ObjectId("5f7eeac889d7eb67df1f3b36"), "cust_id" : "cust_id", "Acc_bal" : "Acc_bal", "Acc_type" : "Acc_type" }
+{ "_id" : ObjectId("5f7eeac889d7eb67df1f3b37"), "cust_id" : 2, "Acc_bal" : 1200, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7eeac889d7eb67df1f3b38"), "cust_id" : 3, "Acc_bal" : 1280, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7eeac889d7eb67df1f3b39"), "cust_id" : 1, "Acc_bal" : 1500, "Acc_type" : "Z" }
+{ "_id" : ObjectId("5f7eeac889d7eb67df1f3b3a"), "cust_id" : 2, "Acc_bal" : 3000, "Acc_type" : "A" }
+>

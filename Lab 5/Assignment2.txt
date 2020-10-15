@@ -1,0 +1,50 @@
+> use mongoDB;
+switched to db mongoDB
+> db;
+mongoDB
+>
+> db.createCollection("MongoDBHandsOn");
+{ "ok" : 1 }
+> exit
+bye
+
+C:\Program Files\MongoDB\Server\4.0\bin>
+C:\Program Files\MongoDB\Server\4.0\bin>mongoimport -d mongoDB -c MongoDBHandsOn --type csv --headerline --file F:\Mongo\bank-data.csv
+2020-10-15T15:04:02.269+0530    connected to: localhost
+2020-10-15T15:04:02.296+0530    imported 600 documents
+
+C:\Program Files\MongoDB\Server\4.0\bin>mongo
+MongoDB shell version v4.0.20-36-gf8006ee
+connecting to: mongodb://127.0.0.1:27017/?gssapiServiceName=mongodb
+Implicit session: session { "id" : UUID("828b85f4-deb4-4348-93ec-884881d118a7") }
+MongoDB server version: 4.0.20-36-gf8006ee
+Server has startup warnings:
+2020-10-15T13:20:16.136+0530 I CONTROL  [initandlisten]
+2020-10-15T13:20:16.137+0530 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+2020-10-15T13:20:16.137+0530 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+2020-10-15T13:20:16.137+0530 I CONTROL  [initandlisten]
+---
+Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+
+The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+and anyone you share the URL with. MongoDB may use this information to make product
+improvements and to suggest MongoDB products and deployment options to you.
+
+To enable free monitoring, run the following command: db.enableFreeMonitoring()
+To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+---
+
+> use mongoDB;
+switched to db mongoDB
+> db.MongoDBHandsOn.aggregate([
+...     { $group : { _id: null, sum: {$sum:"$children"} } }
+... ])
+{ "_id" : null, "sum" : 607 }
+>
+> db.MongoDBHandsOn.aggregate([
+...     { $group : { _id: "Avg of Age", avg: {$avg:"$age"} } }
+... ])
+{ "_id" : "Avg of Age", "avg" : 42.395 }
+>
+>

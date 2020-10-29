@@ -1,0 +1,32 @@
+cqlsh> CREATE KEYSPACE Student WITH replication = {'class':'SimpleStrategy','replication_factor':3}
+   ... ;
+cqlsh> use Student;
+cqlsh:student> CREATE COLUMNFAMILY StudentInfo(Student_Id INT PRIMARY KEY, Student_Name VARCHAR, Date_of_Joining VARCHAR,Semester INT, Dept_Name VARCHAR);
+cqlsh:student> BEGIN BATCH INSERT INTO StudentInfo (Student_Id, Student_Name, Date_of_Joining, Semester, Dept_name) values(1 ,'Rounak','11/12/2020',7,'CSE');
+           ... INSERT INTO StudentInfo (Student_Id, Student_Name, Date_of_Joining, Semester, Dept_name) values(2,'Sai','19/12/2020',7,'CSE');
+           ... APPLY BATCH;
+cqlsh:student> INSERT INTO StudentInfo (Student_Id, Student_Name, Date_of_Joining, Semester, Dept_name) values(121,'Saif','20/12/2020',7,'CSE');
+cqlsh:student> UPDATE Student.Student_Info SET Dept_name = 'ISE' WHERE Student_Id =121;
+InvalidRequest: Error from server: code=2200 [Invalid query] message="unconfigured table student_info"
+cqlsh:student> UPDATE Student.StudentInfo SET Dept_name = 'ISE' WHERE Student_Id =121;
+cqlsh:student> SELECT * FROM StudentInfo;
+
+ student_id | date_of_joining | dept_name | semester | student_name
+------------+-----------------+-----------+----------+--------------
+          1 |      11/12/2020 |       CSE |        7 |       Rounak
+          2 |      19/12/2020 |       CSE |        7 |          Sai
+        121 |      20/12/2020 |       ISE |        7 |         Saif
+
+(3 rows)
+cqlsh:student> UPDATE Student.StudentInfo SET Student_Name='Abhishek' WHERE Student_Id =121;
+cqlsh:student> SELECT * FROM StudentInfo;
+
+ student_id | date_of_joining | dept_name | semester | student_name
+------------+-----------------+-----------+----------+--------------
+          1 |      11/12/2020 |       CSE |        7 |       Rounak
+          2 |      19/12/2020 |       CSE |        7 |          Sai
+        121 |      20/12/2020 |       ISE |        7 |     Abhishek
+
+(3 rows)
+cqlsh:student> 
+cqlsh:student> 

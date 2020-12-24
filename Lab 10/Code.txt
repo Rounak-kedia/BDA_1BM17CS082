@@ -1,0 +1,45 @@
+A.
+
+CREATE DATABASE IF NOT EXISTS lab9 COMMENT 'employee program' WITH DBPROPERTIES 
+('creator'=ROUNAK); 
+SHOW DATABASES; 
+DESCRIBE DATABASE lab9; 
+USE lab9; 
+CREATE EXTERNAL TABLE IF NOT EXISTS Employee(EmpID INT,EmpName 
+STRING,Designation STRING,Salary FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED 
+BY '\t'; 
+
+B.
+
+LOAD DATA LOCAL INPATH '/home/rounak/Desktop/employeeInput.txt' OVERWRITE INTO 
+TABLE Employee; 
+SELECT * FROM Employee; 
+
+C.
+
+CREATE VIEW emp_30000 AS SELECT * FROM Employee WHERE Salary>30000; 
+SELECT * FROM emp_30000; 
+
+D.
+
+ALTER TABLE Employee ADD COLUMNS(DeptID INT); 
+LOAD DATA LOCAL INPATH '/home/rounak/Desktop/employeeInputAltered.txt' 
+OVERWRITE INTO TABLE Employee; 
+SELECT * FROM Employee; 
+SELECT * FROM Employee ORDER BY DeptID; 
+
+E.
+
+SELECT DeptID,count(*) FROM Employee WHERE Salary>=30000 GROUP BY DeptID; 
+
+F.
+
+CREATE EXTERNAL TABLE IF NOT EXISTS Department(DeptId INT,DeptName STRING) ROW 
+FORMAT DELIMITED FIELDS TERMINATED BY '\t'; 
+LOAD DATA LOCAL INPATH '/home/rounak/Desktop/DepartmentInput.txt' OVERWRITE 
+INTO TABLE Department; 
+SELECT * FROM Department;
+
+G.
+SELECT a.EmpID,a.EmpName,a.Designation,a.Salary,b.DeptName FROM Employee a 
+JOIN Department b ON a.DeptID=b.DeptId; 
